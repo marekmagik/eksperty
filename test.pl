@@ -18,20 +18,22 @@ pytaj_o_czytanie(X) :-
 	xpytaj_o_czytanie(X),!.
 	
 pytaj_o_czytanie(X) :-
-	not(xpytaj_o_czytanie(X)),
-	!, write(' Gdzie najczesciej czytasz (Dom,Tramwaj,Zajecia)\n'),
+	!,not(xpytaj_o_czytanie(X)),
+	write(' Gdzie najczesciej czytasz (Dom,Tramwaj,Zajecia)\n'),
 	readln([Replay]),
-	odpowiedz_o_czytaniu(Replay, X),
+	odpowiedz_o_czytaniu(Replay, X). 
+	
+odpowiedz_o_czytaniu(Replay, X):-
+	sub_string(Replay, 0, _, _, 'Dom'),
+	assertz(xpytaj_o_czytanie(X)).
+
+odpowiedz_o_czytaniu(Replay, X):-
+	sub_string(Replay, 0, _, _, 'Tramwaj'),
 	assertz(xpytaj_o_czytanie(X)).
 	
-odpowiedz_o_czytaniu(Replay, dom):-
-	sub_string(Replay, 0, _, _, 'Dom').
-
-odpowiedz_o_czytaniu(Replay, tramwaj):-
-	sub_string(Replay, 0, _, _, 'Tramwaj').
-	
-odpowiedz_o_czytaniu(Replay, zajecia):-
-	sub_string(Replay, 0, _, _, 'Zajecia').
+odpowiedz_o_czytaniu(Replay, X):-
+	sub_string(Replay, 0, _, _, 'Zajecia'),
+	assertz(xpytaj_o_czytanie(X)).
 	 
 % fakt posredni : lubi fantastyke
 lubi(fantastyka) :-
@@ -51,11 +53,17 @@ odpowiedz_o_grze(Replay, shootery):-
 	
 odpowiedz_o_grze(Replay, strategie):-
 	sub_string(Replay, 0, _, _, 'Strategie').
+	
 
+% czyszczenie zapisanych danych
+wyczysc_fakty :-
+	write('\nNacisnij enter aby zakonczyc\n'),
+	retractall(xpytaj_o_czytanie(_)),
+	readln(_).
 	
 % do odpalania
 wykonaj_ksiazki :-
-	polec(X),!,write('Polecam Ci '), write(X), nl.
+	polec(X),!,write('Polecam Ci '), write(X), nl, wyczysc_fakty.
 
 
 
