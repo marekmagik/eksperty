@@ -18,6 +18,15 @@ pytaj_o_czytanie(X) :-
 	xpytaj_o_czytanie(X),!.
 	
 pytaj_o_czytanie(X) :-
+	[F,_] = difference([dom,tramwaj,zajeca],X),
+	xpytaj_o_czytanie(F),!.
+	
+pytaj_o_czytanie(X) :-
+	[_,L] = difference([dom,tramwaj,zajeca],X),
+	xpytaj_o_czytanie(L),!.
+	
+
+pytaj_o_czytanie(X) :-
 	!,not(xpytaj_o_czytanie(X)),
 	write(' Gdzie najczesciej czytasz (dom,tramwaj,zajecia)\n'),
 	readln([Replay]),
