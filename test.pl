@@ -19,20 +19,26 @@ pytaj_o_czytanie(X) :-
 	
 pytaj_o_czytanie(X) :-
 	!,not(xpytaj_o_czytanie(X)),
-	write(' Gdzie najczesciej czytasz (Dom,Tramwaj,Zajecia)\n'),
+	write(' Gdzie najczesciej czytasz (dom,tramwaj,zajecia)\n'),
 	readln([Replay]),
-	odpowiedz_o_czytaniu(Replay, X). 
+	odpowiedz_o_czytaniu(Replay,X). 
 	
-odpowiedz_o_czytaniu(Replay, X):-
-	sub_string(Replay, 0, _, _, 'Dom'),
-	assertz(xpytaj_o_czytanie(X)).
+odpowiedz_o_czytaniu(Replay,X):-
+	sub_string(Replay, 0, _, _, 'dom'),
+	pamietaj(dom),
+	X == dom.
 
-odpowiedz_o_czytaniu(Replay, X):-
-	sub_string(Replay, 0, _, _, 'Tramwaj'),
-	assertz(xpytaj_o_czytanie(X)).
+odpowiedz_o_czytaniu(Replay,X):-
+	sub_string(Replay, 0, _, _, 'tramwaj'),
+	pamietaj(tramwaj),
+	X == tramwaj.
 	
-odpowiedz_o_czytaniu(Replay, X):-
-	sub_string(Replay, 0, _, _, 'Zajecia'),
+odpowiedz_o_czytaniu(Replay,X):-
+	sub_string(Replay, 0, _, _, 'zajecia'),
+	pamietaj(zajecia),
+	X == zajecia.
+	
+pamietaj(X) :-
 	assertz(xpytaj_o_czytanie(X)).
 	 
 % fakt posredni : lubi fantastyke
