@@ -8,61 +8,36 @@ polec(lekka_pozycja_fantasy) :-
     
 % Fakty posrednie
 czyta(rzadko) :-
-    pytaj_o_czytanie(tramwaj).
+    pytaj('Gdzie najczesciej czytasz (dom,tramwaj,zajecia)?: ',[dom,tramwaj,zajecia],tramwaj,czytanie).
     
 czyta(rzadko) :-
-    pytaj_o_czytanie(zajecia).
+    pytaj('Gdzie najczesciej czytasz (dom,tramwaj,zajecia)?: ',[dom,tramwaj,zajecia],zajecia,czytanie).
 
 lubi(fantastyka) :-
-    pytaj_o_gre(rpg).
-
-
-% Pytania o symptomy
-pytaj_o_czytanie(X) :-
-    memory(czytanie,X).
-
-pytaj_o_czytanie(X) :-
-    subtract([dom,tramwaj,zajecia],[X],L),
-    nth1(1,L,F),
-    nth1(2,L,S),
-    not(memory(czytanie, F)),
-    not(memory(czytanie, S)),
-    write(' Gdzie najczesciej czytasz (dom,tramwaj,zajecia)\n'),
-    readln([Replay]),
-    pamietaj(czytanie, Replay),
-    Replay == X,
-    odpowiedz_o_czytaniu(X).
-
-odpowiedz_o_czytaniu(dom):- true.
-
-odpowiedz_o_czytaniu(tramwaj):- true.
-    
-odpowiedz_o_czytaniu(zajecia):- true.
+    pytaj('W jakie gry komputerowe najczesciej grasz (shootery,rpg,strategie)?: ',[shootery,rpg,strategie],rpg,granie).
         
-% pytania o to w co gra
-pytaj_o_gre(X) :-
-    !, write(' W jakie gry komputerowe najczesciej grasz? (Shootery,RPG,Strategie)\n'),
-    readln([Replay]),
-    odpowiedz_o_grze(Replay, X).
-    
-odpowiedz_o_grze(Replay, rpg):-
-    sub_string(Replay, 0, _, _, 'RPG').
-
-odpowiedz_o_grze(Replay, shootery):-
-    sub_string(Replay, 0, _, _, 'Shootery').
-    
-odpowiedz_o_grze(Replay, strategie):-
-    sub_string(Replay, 0, _, _, 'Strategie').
-    
 
 % Funkcje pomocnicze
 pamietaj(X, Y) :-
     assertz(memory(X, Y)).
 
+pytaj(_,_,Answer,Type) :-
+	memory(Type,Answer).
+	
+pytaj(Question,Answers,Answer,Type) :-
+	subtract(Answers,[Answer],Subtracted),
+	sprawdz(Subtracted,Type),
+	write(Question),
+	readln([Reply]),
+	pamietaj(Type,Reply),
+	Reply == Answer.
+	
+sprawdz([],_).
+sprawdz([X|Rest],Type) :- not(memory(Type,X)),sprawdz(Rest,Type).
 
 % Czyszczenie zapisanych danych
 wyczysc_fakty :-
-    write('Nacisnij enter aby zakonczyc\n'),
+    write('Nacisnij enter aby zakonczyc'),
     retractall(memory(_,_)),
     readln(_).
     
@@ -71,5 +46,5 @@ wykonaj_ksiazki :-
     polec(X),!,write('Polecam Ci '), write(X), nl, wyczysc_fakty.
     
 wykonaj_ksiazki :-
-    write('\nNie znalazlem dopasowania'),nl,
+    write('Nie znalazlem dopasowania'),nl,
     wyczysc_fakty.
