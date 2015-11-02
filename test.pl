@@ -8,13 +8,13 @@ polec(lekka_pozycja_fantasy) :-
     
 % Fakty posrednie
 czyta(rzadko) :-
-    pytaj('Gdzie najczesciej czytasz (dom,tramwaj,zajecia)?: ',[dom,tramwaj,zajecia],tramwaj,czytanie).
+    pytaj('Gdzie najczesciej czytasz ',[dom,tramwaj,zajecia],tramwaj,czytanie).
     
 czyta(rzadko) :-
-    pytaj('Gdzie najczesciej czytasz (dom,tramwaj,zajecia)?: ',[dom,tramwaj,zajecia],zajecia,czytanie).
+    pytaj('Gdzie najczesciej czytasz ',[dom,tramwaj,zajecia],zajecia,czytanie).
 
 lubi(fantastyka) :-
-    pytaj('W jakie gry komputerowe najczesciej grasz (shootery,rpg,strategie)?: ',[shootery,rpg,strategie],rpg,granie).
+    pytaj('W jakie gry komputerowe najczesciej grasz ',[shootery,rpg,strategie],rpg,granie).
         
 
 % Funkcje pomocnicze
@@ -27,10 +27,15 @@ pytaj(_,_,Answer,Type) :-
 pytaj(Question,Answers,Answer,Type) :-
 	subtract(Answers,[Answer],Subtracted),
 	sprawdz(Subtracted,Type),
-	write(Question),
-	readln([Reply]),
+	uzyskaj_poprawna_odpowiedz(Question,Answers,Reply),
 	pamietaj(Type,Reply),
 	Reply == Answer.
+	
+uzyskaj_poprawna_odpowiedz(Question,Answers,Reply):-
+	repeat,
+	write(Question),write(Answers),write('?: '),nl,
+	readln([Reply]),
+	(member(Reply,Answers)),!.
 	
 sprawdz([],_).
 sprawdz([X|Rest],Type) :- not(memory(Type,X)),sprawdz(Rest,Type).
