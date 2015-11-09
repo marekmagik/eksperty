@@ -15,11 +15,11 @@ question(Text, Answers, gry_komputerowe) :- Text= 'W jakie gry komputerowe najcz
 question(Text, Answers, zagadki) :- Text= 'Czy interesujesz siê intrygami i ³amig³ówkami ', Answers = [tak,nie].
 question(Text, Answers, filmy) :- Text= 'Jakie filmy czêœciej ogl¹dasz w kinie ', Answers = [akcji,familijne,psychologiczne,przygodowe,basnie,thrillery,dramaty].
 question(Text, Answers, wakacje) :- Text= 'Na wakacje najchêtniej pojecha³byœ: ', Answers = [gory,morze,zwiedzanie_zabytkow,kamping].
-question(Text, Answers, oglada) :- Text= 'Wolisz ogl¹daæ ', Answers = [].
-question(Text, Answers, bezdomny) :- Text= 'Widzisz na ulicy bezdomnego zbieraj¹cego na jedzenie. Co robisz: ', Answers = [].
+question(Text, Answers, oglada) :- Text= 'Wolisz ogl¹daæ ', Answers = [seriale,filmy].
+question(Text, Answers, bezdomny) :- Text= 'Widzisz na ulicy bezdomnego zbieraj¹cego na jedzenie. Co robisz: ', Answers = [przechodze_dalej,daje_pieniadze,kupuje_mu_jedzenie].
 question(Text, Answers, studia) :- Text= 'Który kierunek studiów by³by dla Ciebie najbardziej interesuj¹cy ', Answers = [informatyka,fizyka,historia,prawo,kryminalistyka].
 question(Text, Answers, urodziny_partnera) :- Text= 'Swoj¹ drug¹ po³ówkê w dniu jego/jej urodzin zabra³byœ: ', Answers = [kolacja,film_w_domu,spotkanie_z_przyjaciolmi].
-question(Text, Answers, moc) :- Text= 'Któr¹ z tych mocy byæ wybra³ gdybyœ móg³ ', Answers = [].
+question(Text, Answers, moc) :- Text= 'Któr¹ z tych mocy byæ wybra³ gdybyœ móg³ ', Answers = [latanie,czytanie_w_myslach,niewidzialnosc,supersila,podroz_w_czasie].
 question(Text, Answers, postac_historyczna) :- Text= 'Czy posiadasz swoj¹ ulubion¹ postaæ historyczn¹, o której dyskutowa³eœ ze znajomym ', Answers = [tak,nie].
 
 
@@ -104,11 +104,13 @@ lubi(zagadki) :-
 	pytaj([tak],zagadki),
 	lubi_grac_w(przygodowe),
 	pytaj([kryminalistyka],studia),
+	pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
 	pamietaj(lubi,zagadki).
 	
 lubi(podroze) :-
 	pytaj([tak],podroze),
 	pytaj([gory],wakacje),
+	pytaj([latanie,podroz_w_czasie],moc),
 	pamietaj(lubi,podroze).
 	
 lubi(horrory) :-
@@ -124,7 +126,8 @@ lubi(biografia) :-
 
 lubi(lekkie_pozycje) :-
     (pytaj([okazjonalnie,rzadko],jak_czesto);
-    czyta(rzadko)),
+    czyta(rzadko);
+    pytaj([seriale],oglada)),
     pytaj([impulsywny],jest),
     (pytaj([tak],podroze);
     pytaj([przygodowe,akcji,familijne],filmy)),
@@ -133,7 +136,8 @@ lubi(lekkie_pozycje) :-
     
 lubi(ciezkie_pozycje) :-
     (pytaj([codziennie],jak_czesto);
-    czyta(czesto)),
+    czyta(czesto);
+    pytaj([filmy],oglada)),
     (pytaj([tak],wyobraznia);
     pytaj([psychologiczne,thrillery,dramaty],filmy)),
     pytaj([opanowany],jest),
@@ -143,6 +147,7 @@ lubi(naukowe) :-
     pytaj([informatyka,fizyka],studia),
     pytaj([tak],nauka),
     pytaj([tak],zycie_pozaziemskie),
+    pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
     pamietaj(lubi,naukowe).
 
         	
@@ -151,6 +156,7 @@ lubi(romans) :-
     pytaj([rpg,przygodowe],gry_komputerowe),
     pytaj([introwertyk,melancholik],charakter),
     pytaj([pelna],szklanka),
+    pytaj([daje_pieniadze,kupuje_mu_jedzenie],bezdomny),
     pamietaj(lubi,romans).
 
 lubi(historia) :-
@@ -159,6 +165,7 @@ lubi(historia) :-
     pytaj([gory,zwiedzanie_zabytkow],wakacje));
     pytaj([tak],historia),
     pytaj([historia],studia),
+    pytaj([niewidzialnosc,podroz_w_czasie],moc),
     pamietaj(lubi,historia).        
 
 lubi(podroze) :-
