@@ -26,82 +26,100 @@ question(Text, Answers, postac_historyczna) :- Text= 'Czy posiadasz swoj¹ ulubio
 % Hipotezy
 polec(lekka_pozycja_fantasy) :-
     lubi(fantastyka),
-    lubi(lekkie_pozycje).
+    lubi(lekkie_pozycje),
+    pamietaj(polec,lekka_pozycja_fantasy).
 
 polec(ciezka_pozycja_fantasy) :-
     lubi(fantastyka),
-    lubi(ciezkie_pozycje).
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,ciezka_pozycja_fantasy).
 
 polec(popularnonaukowa) :-
     lubi(naukowe),
-    lubi(ciezkie_pozycje).
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,popularnonaukowa).
 	
 polec(romans) :-
     lubi(romans),
-    lubi(lekkie_pozycje).
+    lubi(lekkie_pozycje),
+    pamietaj(polec,romans).
     
 polec(ciezka_pozycja_historyczna) :-
     lubi(historia),
-    lubi(ciezkie_pozycje).
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,ciezka_pozycja_historyczna).
 
 polec(lekka_pozycja_historyczna) :-
     lubi(historia),
     czyta(rzadko),
-    lubi(podroze).
+    lubi(podroze),
+    pamietaj(polec,lekka_pozycja_historyczna).
     
 polec(kryminal) :-
 	lubi(zagadki),
-	czyta(rzadko).
+	czyta(rzadko),
+	pamietaj(polec,kryminal).
 	
 polec(ksiazka_przygodowa) :-
 	lubi(lekkie_pozycje),
 	lubi(podroze),
-	typ(optymista).
+	typ(optymista),
+	pamietaj(polec,ksiazka_przygodowa).
 	
 polec(horror) :-
 	lubi(horrory),
-	lubi(ciezkie_pozycje).
+	lubi(ciezkie_pozycje),
+	pamietaj(polec,horror).
 	
 polec(biografia) :-
 	lubi(biografia),
-	lubi(ciezkie_pozycje).
+	lubi(ciezkie_pozycje),
+	pamietaj(polec,biografia).
 
 polec(science_fiction) :-
 	lubi(ciezkie_pozycje),
 	lubi(podroze),
-	lubi(naukowe).
+	lubi(naukowe),
+	pamietaj(polec,science_fiction).
 	
     
 % Fakty posrednie
 czyta(rzadko) :-
-    pytaj([tramwaj,zajecia],gdzie).
+    pytaj([tramwaj,zajecia],gdzie),
+    pamietaj(czyta,rzadko).
 
 czyta(czesto) :-
-    pytaj([dom],gdzie).
+    pytaj([dom],gdzie),
+    pamietaj(czyta,czesto).
 
 lubi(fantastyka) :-
     pytaj([rpg],gry_komputerowe),
     (pytaj([tak],wyobraznia);
     pytaj([tak],zycie_pozaziemskie)),
-    pytaj([przygodowe,basnie],filmy).
+    pytaj([przygodowe,basnie],filmy),
+    pamietaj(lubi,fantastyka).
     
     
 lubi(zagadki) :-
 	pytaj([tak],zagadki),
 	lubi_grac_w(przygodowe),
-	pytaj([kryminalistyka],studia).
+	pytaj([kryminalistyka],studia),
+	pamietaj(lubi,zagadki).
 	
 lubi(podroze) :-
 	pytaj([tak],podroze),
-	pytaj([gory],wakacje).
+	pytaj([gory],wakacje),
+	pamietaj(lubi,podroze).
 	
 lubi(horrory) :-
 	lubi_grac_w(horrory),
-	typ(pesymista).
+	typ(pesymista),
+	pamietaj(lubi,horrory).
 		
 lubi(biografia) :-
 	lubi(historia),
-	pytaj([tak],postac_historyczna).
+	pytaj([tak],postac_historyczna),
+	pamietaj(lubi,biografia).
 
 
 lubi(lekkie_pozycje) :-
@@ -109,7 +127,8 @@ lubi(lekkie_pozycje) :-
     czyta(rzadko)),
     pytaj([impulsywny],jest),
     (pytaj([tak],podroze);
-    pytaj([przygodowe,akcji,familijne],filmy)).
+    pytaj([przygodowe,akcji,familijne],filmy)),
+    pamietaj(lubi,lekkie_pozycje).
         
     
 lubi(ciezkie_pozycje) :-
@@ -117,36 +136,42 @@ lubi(ciezkie_pozycje) :-
     czyta(czesto)),
     (pytaj([tak],wyobraznia);
     pytaj([psychologiczne,thrillery,dramaty],filmy)),
-    pytaj([opanowany],jest).
+    pytaj([opanowany],jest),
+    pamietaj(lubi,ciezkie_pozycje).
 
 lubi(naukowe) :-
     pytaj([informatyka,fizyka],studia),
     pytaj([tak],nauka),
-    pytaj([tak],zycie_pozaziemskie).
-% // TODO: dodaæ strategie
+    pytaj([tak],zycie_pozaziemskie),
+    pamietaj(lubi,naukowe).
 
         	
 lubi(romans) :-
     pytaj([kolacja,film_w_domu],urodziny_partnera),
     pytaj([rpg,przygodowe],gry_komputerowe),
     pytaj([introwertyk,melancholik],charakter),
-    pytaj([pelna],szklanka).
+    pytaj([pelna],szklanka),
+    pamietaj(lubi,romans).
 
 lubi(historia) :-
     (pytaj([tak],postac_historyczna),
     pytaj([shootery,strategie],gry_komputerowe),
     pytaj([gory,zwiedzanie_zabytkow],wakacje));
     pytaj([tak],historia),
-    pytaj([historia],studia).        
+    pytaj([historia],studia),
+    pamietaj(lubi,historia).        
 
 lubi(podroze) :-
-    pytaj([tak],podroze).
+    pytaj([tak],podroze),
+    pamietaj(lubi,podroze).
 	
 typ(optymista) :-
-	pytaj([pelna],szklanka).
+	pytaj([pelna],szklanka),
+	pamietaj(typ,optymista).
 	
 typ(pesymista) :-
-	pytaj([pusta],szklanka).
+	pytaj([pusta],szklanka),
+	pamietaj(typ,pesymista).
 	
 lubi_grac_w(X) :-
     pytaj([X],gry_komputerowe).
@@ -173,8 +198,15 @@ uzyskaj_poprawna_odpowiedz(Question,Answers,Reply):-
 	repeat,
 	write(Question),write(Answers),write('?: '),nl,
 	readln([Reply]),
+	what(Reply),
 	(member(Reply,Answers)),!.
 
+what(what) :-
+	write('What question: '),nl,
+	memory(A,B),
+	write(A),write(' '),write(B),nl.
+
+what(_) :- true.
 
 % Czyszczenie zapisanych danych
 wyczysc_fakty :-
