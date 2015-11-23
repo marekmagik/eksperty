@@ -1,4 +1,4 @@
-:- dynamic([memory/2]).
+:- dynamic([memory/2,what/3,how_s_list/1,how_p_list/1,how/3]).
 
 % Pytania
 question(Text, Answers, jak_czesto) :- Text= 'Jak czêsto czytasz ksi¹¿ki ', Answers = [codziennie,okazjonalnie,rzadko].
@@ -25,234 +25,360 @@ question(Text, Answers, postac_historyczna) :- Text= 'Czy posiadasz swoj¹ ulubio
 
 % Hipotezy
 polec(lekka_pozycja_fantasy) :-
-    lubi(fantastyka, [polec(lekka_pozycja_fantasy)],Stack1),
-%    nl,nl,write('FANTASTYKA OK:  '),write(Stack1),nl,nl,
-    lubi(lekkie_pozycje, [polec(lekka_pozycja_fantasy)],Stack2),
-%    nl,nl,write('FANTASTYKA OK:  '),write(Stack2),nl,nl,
-    pamietaj(polec,lekka_pozycja_fantasy,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(fantastyka),
+    lubi(lekkie_pozycje),
+    pamietaj(polec,lekka_pozycja_fantasy,hipoteza).
 
 polec(ciezka_pozycja_fantasy) :-
-    lubi(fantastyka,[polec(ciezka_pozycja_fantasy)],Stack1),
-    lubi(ciezkie_pozycje,[polec(ciezka_pozycja_fantasy)],Stack2),
-    pamietaj(polec,ciezka_pozycja_fantasy,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(fantastyka),
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,ciezka_pozycja_fantasy,hipoteza).
 
 polec(popularnonaukowa) :-
-    lubi(naukowe,[polec(popularnonaukowa)],Stack1),
-    lubi(ciezkie_pozycje,[polec(popularnonaukowa)],Stack2),
-    pamietaj(polec,popularnonaukowa,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(naukowe),
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,popularnonaukowa,hipoteza).
 	
 polec(romans) :-
-    lubi(romans,[polec(romans)],Stack1),
-    lubi(lekkie_pozycje,[polec(romans)],Stack2),
-    pamietaj(polec,romans,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(romans),
+    lubi(lekkie_pozycje),
+    pamietaj(polec,romans,hipoteza).
     
 polec(ciezka_pozycja_historyczna) :-
-    lubi(historia,[polec(ciezka_pozycja_historyczna)],Stack1),
-    lubi(ciezkie_pozycje,[polec(ciezka_pozycja_historyczna)],Stack2),
-    pamietaj(polec,ciezka_pozycja_historyczna,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(historia),
+    lubi(ciezkie_pozycje),
+    pamietaj(polec,ciezka_pozycja_historyczna,hipoteza).
 
 polec(lekka_pozycja_historyczna) :-
-    lubi(historia,[polec(lekka_pozycja_historyczna)],Stack1),
-    czyta(rzadko,[polec(lekka_pozycja_historyczna)],Stack2),
-    lubi(podroze,[polec(lekka_pozycja_historyczna)],Stack3),
-    pamietaj(polec,lekka_pozycja_historyczna,ResultStack).
+	wyczysc(liste_posrednich),
+    lubi(historia),
+    czyta(rzadko),
+    lubi(podroze),
+    pamietaj(polec,lekka_pozycja_historyczna,hipoteza).
     
 polec(kryminal) :-
-	lubi(zagadki,[polec(kryminal)],Stack1),
-	czyta(rzadko,[polec(kryminal)],Stack2),
-	pamietaj(polec,kryminal,ResultStack).
+	wyczysc(liste_posrednich),
+	lubi(zagadki),
+	czyta(rzadko),
+	pamietaj(polec,kryminal,hipoteza).
 	
 polec(ksiazka_przygodowa) :-
-	lubi(lekkie_pozycje,[polec(ksiazka_przygodowa)],Stack1),
-	lubi(podroze,[polec(ksiazka_przygodowa)],Stack2),
-	typ(optymista,[polec(ksiazka_przygodowa)],Stack3),
-	pamietaj(polec,ksiazka_przygodowa,ResultStack).
+	wyczysc(liste_posrednich),
+	lubi(lekkie_pozycje),
+	lubi(podroze),
+	typ(optymista),
+	pamietaj(polec,ksiazka_przygodowa,hipoteza).
 	
 polec(horror) :-
-	lubi(horrory,[polec(horror)],Stack1),
-	lubi(ciezkie_pozycje,[polec(horror)],Stack2),
-	pamietaj(polec,horror,ResultStack).
+	wyczysc(liste_posrednich),
+	lubi(horrory),
+	lubi(ciezkie_pozycje),
+	pamietaj(polec,horror,hipoteza).
 	
 polec(biografia) :-
-	lubi(biografia,[polec(biografia)],Stack1),
-	lubi(ciezkie_pozycje,[polec(biografia)],Stack2),
-	pamietaj(polec,biografia,ResultStack).
+	wyczysc(liste_posrednich),
+	lubi(biografia),
+	lubi(ciezkie_pozycje),
+	pamietaj(polec,biografia,hipoteza).
 
 polec(science_fiction) :-
-	lubi(ciezkie_pozycje,[polec(science_fiction)],Stack1),
-	lubi(podroze,[polec(science_fiction)],Stack2),
-	lubi(naukowe,[polec(science_fiction)],Stack3),
-	pamietaj(polec,science_fiction,ResultStack).
+	wyczysc(liste_posrednich),
+	lubi(ciezkie_pozycje),
+	lubi(podroze),
+	lubi(naukowe),
+	pamietaj(polec,science_fiction,hipoteza).
 	
     
 % Fakty posrednie
-czyta(rzadko,InitialStack,ResultStack) :-
-    append(InitialStack,[czyta(rzadko)],Stack),
-    pytaj([tramwaj,zajecia],gdzie,Stack,ResultStack),
-    pamietaj(czyta,rzadko,ResultStack).
+czyta(rzadko) :-
+	wyczysc(liste_symptomow),
+    pytaj([tramwaj,zajecia],gdzie),
+    pamietaj(czyta,rzadko,posredni).
 
-czyta(czesto,InitialStack,ResultStack) :-
-    append(InitialStack,[czyta(czesto)],Stack),
-    pytaj([dom],gdzie,Stack,ResultStack),
-    pamietaj(czyta,czesto,ResultStack).
+czyta(czesto) :-
+	wyczysc(liste_symptomow),
+    pytaj([dom],gdzie),
+    pamietaj(czyta,czesto,posredni).
 
-lubi(fantastyka,InitialStack,ResultStack) :-
-    append(InitialStack,[lubi(fantastyka)],Stack),
-    pytaj([rpg],gry_komputerowe,Stack,Stack1),
-    (pytaj([tak],wyobraznia,Stack1,Stack2);
-    pytaj([tak],zycie_pozaziemskie,Stack1,Stack2)),
-    pytaj([przygodowe,basnie],filmy,Stack2,ResultStack),
-    pamietaj(lubi,fantastyka,ResultStack).
+lubi(fantastyka) :-
+	wyczysc(liste_symptomow),
+    pytaj([rpg],gry_komputerowe),
+    (pytaj([tak],wyobraznia);
+    pytaj([tak],zycie_pozaziemskie)),
+    pytaj([przygodowe,basnie],filmy),
+    pamietaj(lubi,fantastyka,posredni).
     
     
-lubi(zagadki,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(zagadki)],Stack),
-	pytaj([tak],zagadki,Stack,Stack1),
-	lubi_grac_w(przygodowe,Stack1,Stack2),
-	pytaj([kryminalistyka],studia,Stack2,Stack3),
-	pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc,Stack3,ResultStack),
-	pamietaj(lubi,zagadki,ResultStack).
+lubi(zagadki) :-
+	wyczysc(liste_symptomow),
+	pytaj([tak],zagadki),
+	pytaj([przygodowe],gry_komputerowe),
+	pytaj([kryminalistyka],studia),
+	pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
+	pamietaj(lubi,zagadki,posredni).
 	
-lubi(podroze,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(podroze)],Stack),
-	pytaj([tak],podroze,Stack,Stack1),
-	pytaj([gory],wakacje,Stack1,Stack2),
-	pytaj([latanie,podroz_w_czasie],moc,Stack2,ResultStack),
-	pamietaj(lubi,podroze,ResultStack).
+lubi(podroze) :-
+	wyczysc(liste_symptomow),
+	pytaj([tak],podroze),
+	pytaj([gory],wakacje),
+	pytaj([latanie,podroz_w_czasie],moc),
+	pamietaj(lubi,podroze,posredni).
 	
-lubi(horrory,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(horrory)],Stack),
-	lubi_grac_w(horrory,Stack,Stack1),
-	typ(pesymista,Stack1,ResultStack),
-	pamietaj(lubi,horrory,ResultStack).
+lubi(horrory) :-
+	wyczysc(liste_symptomow),
+	pytaj([horrory],gry_komputerowe),
+	typ(pesymista),
+	pamietaj(lubi,horrory,posredni).
 		
-lubi(biografia,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(biografia)],Stack),
-	lubi(historia,Stack,Stack1),
-	pytaj([tak],postac_historyczna,Stack1,ResultStack),
-	pamietaj(lubi,biografia,ResultStack).
+lubi(biografia) :-
+	wyczysc(liste_symptomow),
+	lubi(historia),
+	pytaj([tak],postac_historyczna),
+	pamietaj(lubi,biografia,posredni).
 
 
-lubi(lekkie_pozycje,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(lekkie_pozycje)],Stack),
-    (pytaj([okazjonalnie,rzadko],jak_czesto,Stack,Stack1);
-    czyta(rzadko,Stack,Stack1);
-    pytaj([seriale],oglada,Stack,Stack1)),
-    pytaj([impulsywny],jest,Stack1,Stack2),
-    (pytaj([tak],podroze,Stack2,ResultStack);
-    pytaj([przygodowe,akcji,familijne],filmy,Stack2,ResultStack)),
-    pamietaj(lubi,lekkie_pozycje,ResultStack).
+lubi(lekkie_pozycje) :-
+	wyczysc(liste_symptomow),
+    (pytaj([okazjonalnie,rzadko],jak_czesto);
+    czyta(rzadko);
+    pytaj([seriale],oglada)),
+    pytaj([impulsywny],jest),
+    (pytaj([tak],podroze);
+    pytaj([przygodowe,akcji,familijne],filmy)),
+    pamietaj(lubi,lekkie_pozycje,posredni).
         
     
-lubi(ciezkie_pozycje,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(ciezkie_pozycje)],Stack),
-    (pytaj([codziennie],jak_czesto,Stack,Stack1);
-    czyta(czesto,Stack,Stack1);
-    pytaj([filmy],oglada,Stack,Stack1)),
-    (pytaj([tak],wyobraznia,Stack1,Stack2);
-    pytaj([psychologiczne,thrillery,dramaty],filmy,Stack1,Stack2)),
-    pytaj([opanowany],jest,Stack2,ResultStack),
-    pamietaj(lubi,ciezkie_pozycje,ResultStack).
+lubi(ciezkie_pozycje) :-
+	wyczysc(liste_symptomow),
+    (pytaj([codziennie],jak_czesto);
+    czyta(czesto);
+    pytaj([filmy],oglada)),
+    (pytaj([tak],wyobraznia);
+    pytaj([psychologiczne,thrillery,dramaty],filmy)),
+    pytaj([opanowany],jest),
+    pamietaj(lubi,ciezkie_pozycje,posredni).
 
-lubi(naukowe,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(naukowe)],Stack),
-    pytaj([informatyka,fizyka],studia,Stack,Stack1),
-    pytaj([tak],nauka,Stack1,Stack2),
-    pytaj([tak],zycie_pozaziemskie,Stack2,Stack3),
-    pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc,Stack3,ResultStack),
-    pamietaj(lubi,naukowe,ResultStack).
+lubi(naukowe) :-
+	wyczysc(liste_symptomow),
+    pytaj([informatyka,fizyka],studia),
+    pytaj([tak],nauka),
+    pytaj([tak],zycie_pozaziemskie),
+    pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
+    pamietaj(lubi,naukowe,posredni).  
 
         	
-lubi(romans,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(romans)],Stack),
-    pytaj([kolacja,film_w_domu],urodziny_partnera,Stack,Stack1),
-    pytaj([rpg,przygodowe],gry_komputerowe,Stack1,Stack2),
-    pytaj([introwertyk,melancholik],charakter,Stack2,Stack3),
-    pytaj([pelna],szklanka,Stack3,Stack4),
-    pytaj([daje_pieniadze,kupuje_mu_jedzenie],bezdomny,Stack4,ResultStack),
-    pamietaj(lubi,romans,ResultStack).
+lubi(romans) :-
+	wyczysc(liste_symptomow),
+    pytaj([kolacja,film_w_domu],urodziny_partnera),
+    pytaj([rpg,przygodowe],gry_komputerowe),
+    pytaj([introwertyk,melancholik],charakter),
+    pytaj([pelna],szklanka),
+    pytaj([daje_pieniadze,kupuje_mu_jedzenie],bezdomny),
+    pamietaj(lubi,romans,posredni).
 
-lubi(historia,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(historia)],Stack),
-    (pytaj([tak],postac_historyczna,Stack,Stack1),
-    pytaj([shootery,strategie],gry_komputerowe,Stack1,Stack2),
-    pytaj([gory,zwiedzanie_zabytkow],wakacje,Stack2,Stack3));
-%przekminiæ rozwi¹zanie
-    pytaj([tak],historia,Stack,Stack1),
-    pytaj([historia],studia,Stack1,Stack2),
-    pytaj([niewidzialnosc,podroz_w_czasie],moc,Stack2,ResultStack),
-    pamietaj(lubi,historia,ResultStack).        
+lubi(historia) :-
+	wyczysc(liste_symptomow),
+    (pytaj([tak],postac_historyczna),
+    pytaj([shootery,strategie],gry_komputerowe),
+    pytaj([gory,zwiedzanie_zabytkow],wakacje));
+    pytaj([tak],historia),
+    pytaj([historia],studia),
+    pytaj([niewidzialnosc,podroz_w_czasie],moc),
+    pamietaj(lubi,historia,posredni).        
 
-lubi(podroze,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(podroze)],Stack),
-    pytaj([tak],podroze,Stack,ResultStack),
-    pamietaj(lubi,podroze,ResultStack).
+lubi(podroze) :-
+	wyczysc(liste_symptomow),
+    pytaj([tak],podroze),
+    pamietaj(lubi,podroze,posredni).
 	
-typ(optymista,InitialStack,ResultStack) :-
-	append(InitialStack,[typ(optymista)],Stack),
-	pytaj([pelna],szklanka,Stack,ResultStack),
-	pamietaj(typ,optymista,ResultStack).
+typ(optymista) :-
+	wyczysc(liste_symptomow),
+	pytaj([pelna],szklanka),
+	pamietaj(typ,optymista,posredni).
 	
-typ(pesymista,InitialStack,ResultStack) :-
-	append(InitialStack,[typ(pesymista)],Stack),
-	pytaj([pusta],szklanka,Stack,ResultStack),
-	pamietaj(typ,pesymista,ResultStack).
+typ(pesymista) :-
+	wyczysc(liste_symptomow),
+	pytaj([pusta],szklanka),
+	pamietaj(typ,pesymista,posredni).
 	
-lubi_grac_w(X,InitialStack,ResultStack) :-
-	append(InitialStack,[lubi(biografia)],Stack),
-    pytaj([X],gry_komputerowe,Stack,ResultStack).
     
 
 % Funkcje pomocnicze    
-pamietaj(X, Y, LIST) :-
-    write(X),write(' -> '),write(Y),write(' : '),write(LIST),nl,
-    assertz(memory(X, Y)).
-        
+pamietaj(X, Y, symptom) :-
+	what(symptom,X,Y).
+	
+pamietaj(X, Y, symptom) :-
+    %write(X),write(' -> '),write(Y),write(' : '),write(LIST),nl,
+    not(what(symptom,X,Y)),
+    assertz(memory(X, Y)),
+    assertz(what(symptom,X,Y)),
+    how_s_list(S),
+    append(S,[[X,Y]],NS),
+    retractall(how_s_list(_)),
+    assertz(how_s_list(NS)).   
+   
+pamietaj(X, Y, posredni) :-
+	 what(posredni,X,Y). 
+	 
+pamietaj(X, Y, posredni) :-
+	not(what(posredni,X,Y)),
+    assertz(what(posredni,X,Y)),
+    how_s_list(S),
+    assertz(how(posredni,[X,Y],S)),
+    how_p_list(P),
+    append(P,[[X,Y]],NP),
+    retractall(how_p_list(_)),
+    assertz(how_p_list(NP)).
+   
+pamietaj(X, Y, hipoteza) :-
+    what(hipoteza,X,Y). 
     
+pamietaj(X, Y, hipoteza) :-
+    not(what(hipoteza,X,Y)),
+    assertz(what(hipoteza,X,Y)),
+    how_p_list(S),
+    assertz(how(hipoteza,[X,Y],S)).
+   
 sprawdz([],_) :- false.    
 sprawdz([X|Rest],Type) :- memory(Type,X);sprawdz(Rest,Type).
 
-pytaj(Answer,Type,Stack,NewStack) :-
-	sprawdz(Answer,Type).
+pobierz([X|_],Type,Y) :-
+	memory(Type,X),
+	Y=X.
 
-pytaj(Answer,Type, Stack, NewStack) :-
+pobierz([_|Rest],Type,Y) :-
+	pobierz(Rest,Type,Y).
+
+pytaj(Answer,Type) :-
+	sprawdz(Answer,Type),
+	pobierz(Answer,Type,Y),
+	how_s_list(S), 
+    append(S,[[Type,Y]],NS),
+    retractall(how_s_list(_)),
+    assertz(how_s_list(NS)).
+
+pytaj(Answer,Type) :-
 	question(Question,Answers,Type),
 	(not(sprawdz(Answers, Type)),
-	uzyskaj_poprawna_odpowiedz(Question,Answers,Reply,Stack),
-	pamietaj(Type,Reply,Stack),
-	member(Reply, Answer)),
-	append(Stack,[[Question , Reply]],NewStack).
+	uzyskaj_poprawna_odpowiedz(Question,Answers,Reply),
+	pamietaj(Type,Reply,symptom),
+	member(Reply, Answer)).
 			
-uzyskaj_poprawna_odpowiedz(Question,Answers,Reply,Stack):-
+uzyskaj_poprawna_odpowiedz(Question,Answers,Reply):-
 	repeat,
 	write(Question),write(Answers),write('?: '),nl,
 	readln([Reply]),
 	what(Reply),
-	why(Reply,Stack),
+	why(Reply),
+	how(Reply),
 	(member(Reply,Answers)),!.
 
+how(how) :-
+	nl,write('How question: '),nl,
+	write('Znane symptomy: '),nl,
+	wypisz_dane(symptom).
+	
+how(how) :-
+	nl,write('Fakty posrednie: '),nl,
+	wypisz_dane_dla_how(posredni).
+	
+how(how) :-
+	nl,write('Hipotezy: '),nl,
+	wypisz_dane_dla_how(hipoteza).
+
+how(_) :- true. 
+
+wypisz_element([X|Y]) :-
+	write(X),write(' '),write(Y),nl.
+
+
 what(what) :-
-	write('What question: '),nl,
-	memory(A,B),
-	write(A),write(' '),write(B),nl.
+	nl,write('What question: '),nl,
+	write('Znane symptomy: '),nl,
+	wypisz_dane(symptom).
+	
+what(what) :-
+	nl,write('Znane fakty posrednie: '),nl,
+	wypisz_dane(posredni). 
+	
+what(what) :-
+	nl,write('Znane hipotezy: '),nl, 
+	wypisz_dane(hipoteza). 
 
 what(_) :- true.
 
-why(why,Stack) :-
-	nl,write('Rules: '),nl,
-	write(Stack),
-	nl,nl.
+wypisz_dane(Typ) :-
+	what(Typ,A,B), 
+	write(A),write(' '),write(B),nl.
+	
+wypisz_dane_dla_how(Typ) :-
+	how(Typ,A,B),
+	wypisz_dwuelementowa_liste(A),
+	wypisz_liste_dwuel_list(B). 
 
-why(_,_) :- true.
+wypisz_liste_dwuel_list([]) :- true.	
+
+wypisz_liste_dwuel_list([H|T]) :-
+	write(' - '),wypisz_dwuelementowa_liste(H),
+	wypisz_liste_dwuel_list(T).
+	
+wypisz_dwuelementowa_liste([H,T]) :-
+	write(H),write(' '),write(T),nl.
+	
+wyczysc(liste_posrednich) :-
+	retractall(how_p_list(_)),
+	assertz(how_p_list([])).
+	
+wyczysc(liste_symptomow) :-
+	retractall(how_s_list(_)),
+	assertz(how_s_list([])). 
+
+why(why) :-
+	get_prolog_backtrace(16,B),
+	remove_n_first_elems(4,New,B), 
+	remove_n_last_elems(1,Final,New), 
+	print_backtrace(Final).
+
+why(_) :- true.
+	
+print_backtrace([]) :- true.
+
+print_backtrace([H|T]) :-
+	print_stack_function(H),nl,
+	print_backtrace(T).
+	
+print_stack_function(frame(_,_,Name)) :-  
+	listing(Name).
+	
+
+remove_n_first_elems(N,New_list,List) :-
+	length(X, N), append(X, New_list, List).
+	
+remove_n_last_elems(N,New_list,List) :-
+	length(X, N), append(New_list, X, List). 
 
 % Czyszczenie zapisanych danych
 wyczysc_fakty :-
     write('Nacisnij enter aby zakonczyc'),
     retractall(memory(_,_)),
+    retractall(what(_,_,_)),
+    retractall(how(_,_,_)),
+    retractall(how_s_list(_)),
+    retractall(how_p_list(_)),
     readln(_).
+    
+init() :-
+	assertz(how_s_list([])),
+	assertz(how_p_list([])).
     
 % G³ówna funkcja
 wykonaj_ksiazki :-
+	init(),
     polec(X),!,write('Polecam Ci '), write(X), nl, wyczysc_fakty.
     
 wykonaj_ksiazki :-
