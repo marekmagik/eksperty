@@ -24,164 +24,164 @@ question(Text, Answers, postac_historyczna) :- Text= 'Czy posiadasz swoj¹ ulubio
 
 
 % Hipotezy
-polec(lekka_pozycja_fantasy) :-
+polec(lekka_pozycja_fantasy,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(fantastyka),
-    lubi(lekkie_pozycje),
-    pamietaj(polec,lekka_pozycja_fantasy,hipoteza).
+    lubi(fantastyka,CF_1),
+    lubi(lekkie_pozycje,CF_2),
+    pamietaj(polec,lekka_pozycja_fantasy,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],95).
 
-polec(ciezka_pozycja_fantasy) :-
+polec(ciezka_pozycja_fantasy,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(fantastyka),
-    lubi(ciezkie_pozycje),
-    pamietaj(polec,ciezka_pozycja_fantasy,hipoteza).
+    lubi(fantastyka,CF_1),
+    lubi(ciezkie_pozycje,CF_2),
+    pamietaj(polec,ciezka_pozycja_fantasy,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],95).
 
-polec(popularnonaukowa) :-
+polec(popularnonaukowa,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(naukowe),
-    lubi(ciezkie_pozycje),
-    pamietaj(polec,popularnonaukowa,hipoteza).
+    lubi(naukowe,CF_1),
+    lubi(ciezkie_pozycje,CF_2),
+    pamietaj(polec,popularnonaukowa,hipoteza,oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],95)).
 	
-polec(romans) :-
+polec(romans,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(romans),
-    lubi(lekkie_pozycje),
-    pamietaj(polec,romans,hipoteza).
+    lubi(romans,CF_1),
+    lubi(lekkie_pozycje,CF_2),
+    pamietaj(polec,romans,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],90).
     
-polec(ciezka_pozycja_historyczna) :-
+polec(ciezka_pozycja_historyczna,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(historia),
-    lubi(ciezkie_pozycje),
-    pamietaj(polec,ciezka_pozycja_historyczna,hipoteza).
+    lubi(historia,CF_1),
+    lubi(ciezkie_pozycje,CF_2),
+    pamietaj(polec,ciezka_pozycja_historyczna,hipoteza,oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],85)).
 
-polec(lekka_pozycja_historyczna) :-
+polec(lekka_pozycja_historyczna,CF) :-
 	wyczysc(liste_posrednich),
-    lubi(historia),
-    czyta(rzadko),
-    lubi(podroze),
-    pamietaj(polec,lekka_pozycja_historyczna,hipoteza).
+    lubi(historia,CF_1),
+    czyta(rzadko,CF_2),
+    lubi(podroze,CF_3),
+    pamietaj(polec,lekka_pozycja_historyczna,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2,CF_3],[],[],90).
     
-polec(kryminal) :-
+polec(kryminal,CF) :-
 	wyczysc(liste_posrednich),
-	lubi(zagadki),
-	czyta(rzadko),
-	pamietaj(polec,kryminal,hipoteza).
+	lubi(zagadki,CF_1),
+	czyta(rzadko,CF_2),
+	pamietaj(polec,kryminal,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],85).
 	
-polec(ksiazka_przygodowa) :-
+polec(ksiazka_przygodowa,CF) :-
 	wyczysc(liste_posrednich),
-	lubi(lekkie_pozycje),
-	lubi(podroze),
-	typ(optymista),
-	pamietaj(polec,ksiazka_przygodowa,hipoteza).
+	lubi(lekkie_pozycje,CF_1),
+	lubi(podroze,CF_2),
+	typ(optymista,CF_3),
+	pamietaj(polec,ksiazka_przygodowa,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2,CF_3],[],[],95).
 	
-polec(horror) :-
+polec(horror,CF) :-
 	wyczysc(liste_posrednich),
-	lubi(horrory),
-	lubi(ciezkie_pozycje),
-	pamietaj(polec,horror,hipoteza).
+	lubi(horrory,CF_1),
+	lubi(ciezkie_pozycje,CF_2),
+	pamietaj(polec,horror,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],70).
 	
-polec(biografia) :-
+polec(biografia,CF) :-
 	wyczysc(liste_posrednich),
-	lubi(biografia),
-	lubi(ciezkie_pozycje),
-	pamietaj(polec,biografia,hipoteza).
+	lubi(biografia,CF_1),
+	lubi(ciezkie_pozycje,CF_2),
+	pamietaj(polec,biografia,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2],[],[],80).
 
-polec(science_fiction) :-
+polec(science_fiction,CF) :-
 	wyczysc(liste_posrednich),
-	lubi(ciezkie_pozycje),
-	lubi(podroze),
-	lubi(naukowe),
-	pamietaj(polec,science_fiction,hipoteza).
+	lubi(ciezkie_pozycje,CF_1),
+	lubi(podroze,CF_2),
+	lubi(naukowe,CF_3),
+	pamietaj(polec,science_fiction,hipoteza),oblicz_wspolczynnik(CF,[CF_1,CF_2,CF_3],[],[],90).
 	
     
 % Fakty posrednie
-czyta(rzadko) :-
+czyta(rzadko,CF) :-
 	wyczysc(liste_symptomow),
     pytaj([tramwaj,zajecia],gdzie),
-    pamietaj(czyta,rzadko,posredni).
+    pamietaj(czyta,rzadko,posredni),CF=85.
 
-czyta(czesto) :-
+czyta(czesto,CF) :-
 	wyczysc(liste_symptomow),
     pytaj([dom],gdzie),
-    pamietaj(czyta,czesto,posredni).
+    pamietaj(czyta,czesto,posredni),CF=75.
 
-lubi(fantastyka) :-
+lubi(fantastyka,CF) :-
 	wyczysc(liste_symptomow),
     pytaj([rpg],gry_komputerowe),
     (pytaj([tak],wyobraznia);
     pytaj([tak],zycie_pozaziemskie)),
     pytaj([przygodowe,basnie],filmy),
-    pamietaj(lubi,fantastyka,posredni).
+    pamietaj(lubi,fantastyka,posredni),CF=85.
     
     
-lubi(zagadki) :-
+lubi(zagadki,CF) :-
 	wyczysc(liste_symptomow),
 	pytaj([tak],zagadki),
 	pytaj([przygodowe],gry_komputerowe),
 	pytaj([kryminalistyka],studia),
 	pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
-	pamietaj(lubi,zagadki,posredni).
+	pamietaj(lubi,zagadki,posredni),CF=80.
 	
-lubi(podroze) :-
+lubi(podroze,CF) :-
 	wyczysc(liste_symptomow),
 	pytaj([tak],podroze),
 	pytaj([gory],wakacje),
 	pytaj([latanie,podroz_w_czasie],moc),
-	pamietaj(lubi,podroze,posredni).
+	pamietaj(lubi,podroze,posredni),CF=90.
 	
-lubi(horrory) :-
+lubi(horrory,CF) :-
 	wyczysc(liste_symptomow),
 	pytaj([horrory],gry_komputerowe),
-	typ(pesymista),
-	pamietaj(lubi,horrory,posredni).
+	typ(pesymista,CF_1),
+	pamietaj(lubi,horrory,posredni),oblicz_wspolczynnik(CF,[100],[[typ,pesymista]],[CF_1],65).
 		
-lubi(biografia) :-
+lubi(biografia,CF) :-
 	wyczysc(liste_symptomow),
-	lubi(historia),
+	lubi(historia,CF_1),
 	pytaj([tak],postac_historyczna),
-	pamietaj(lubi,biografia,posredni).
+	pamietaj(lubi,biografia,posredni),oblicz_wspolczynnik(CF,[100],[[lubi,historia]],[CF_1],65).
 
 
-lubi(lekkie_pozycje) :-
+lubi(lekkie_pozycje,CF) :-
 	wyczysc(liste_symptomow),
     (pytaj([okazjonalnie,rzadko],jak_czesto);
-    czyta(rzadko);
+    czyta(rzadko,CF_1);
     pytaj([seriale],oglada)),
     pytaj([impulsywny],jest),
-    (pytaj([tak],podroze);
+    (pytaj([tak],podroze); 
     pytaj([przygodowe,akcji,familijne],filmy)),
-    pamietaj(lubi,lekkie_pozycje,posredni).
+    pamietaj(lubi,lekkie_pozycje,posredni),oblicz_wspolczynnik(CF,[100],[[czyta,rzadko]],[CF_1],70).
         
     
-lubi(ciezkie_pozycje) :-
+lubi(ciezkie_pozycje,CF) :-
 	wyczysc(liste_symptomow),
     (pytaj([codziennie],jak_czesto);
-    czyta(czesto);
+    czyta(czesto,CF_1);
     pytaj([filmy],oglada)),
     (pytaj([tak],wyobraznia);
     pytaj([psychologiczne,thrillery,dramaty],filmy)),
     pytaj([opanowany],jest),
-    pamietaj(lubi,ciezkie_pozycje,posredni).
+    pamietaj(lubi,ciezkie_pozycje,posredni),oblicz_wspolczynnik(CF,[100],[[czyta,czesto]],[CF_1],65). 
 
-lubi(naukowe) :-
+lubi(naukowe,CF) :-
 	wyczysc(liste_symptomow),
     pytaj([informatyka,fizyka],studia),
     pytaj([tak],nauka),
     pytaj([tak],zycie_pozaziemskie),
     pytaj([czytanie_w_myslach,niewidzialnosc,podroz_w_czasie],moc),
-    pamietaj(lubi,naukowe,posredni).  
+    pamietaj(lubi,naukowe,posredni),CF=95.  
 
         	
-lubi(romans) :-
+lubi(romans,CF) :-
 	wyczysc(liste_symptomow),
     pytaj([kolacja,film_w_domu],urodziny_partnera),
     pytaj([rpg,przygodowe],gry_komputerowe),
     pytaj([introwertyk,melancholik],charakter),
     pytaj([pelna],szklanka),
     pytaj([daje_pieniadze,kupuje_mu_jedzenie],bezdomny),
-    pamietaj(lubi,romans,posredni).
+    pamietaj(lubi,romans,posredni),CF=75.
 
-lubi(historia) :-
+lubi(historia,CF) :-
 	wyczysc(liste_symptomow),
     (pytaj([tak],postac_historyczna),
     pytaj([shootery,strategie],gry_komputerowe),
@@ -189,26 +189,43 @@ lubi(historia) :-
     pytaj([tak],historia),
     pytaj([historia],studia),
     pytaj([niewidzialnosc,podroz_w_czasie],moc),
-    pamietaj(lubi,historia,posredni).        
+    pamietaj(lubi,historia,posredni),CF=95.        
 
-lubi(podroze) :-
-	wyczysc(liste_symptomow),
+lubi(podroze,CF) :-
+	wyczysc(liste_symptomow), 
     pytaj([tak],podroze),
-    pamietaj(lubi,podroze,posredni).
+    pamietaj(lubi,podroze,posredni).CF=95.
 	
-typ(optymista) :-
+typ(optymista,CF) :-
 	wyczysc(liste_symptomow),
 	pytaj([pelna],szklanka),
-	pamietaj(typ,optymista,posredni).
+	pamietaj(typ,optymista,posredni),CF=70.
 	
-typ(pesymista) :-
+typ(pesymista,CF) :-
 	wyczysc(liste_symptomow),
 	pytaj([pusta],szklanka),
-	pamietaj(typ,pesymista,posredni).
+	pamietaj(typ,pesymista,posredni),CF=70.
 	
     
 
 % Funkcje pomocnicze    
+dodaj_dodatkowe(Probabilities,[],[],Result) :- Result=Probabilities.
+
+dodaj_dodatkowe(Probabilities,[H1|T1],[H2|T2],Result) :- 
+	[Memory1,Memory2] = H1,  
+	what(posredni,Memory1,Memory2),
+	append(Probabilities,[H2],New_Probabilities),
+	dodaj_dodatkowe(New_Probabilities,T1,T2,Result).
+	
+dodaj_dodatkowe(Probabilities,[_|T1],[_|T2],Result) :- 
+	dodaj_dodatkowe(Probabilities,T1,T2,Result).
+
+oblicz_wspolczynnik(Result_CF,Probabilities,Additional_Facts,Additional_Probabilities,CF) :-
+	dodaj_dodatkowe(Probabilities,Additional_Facts,Additional_Probabilities,Result),
+	min_list(Result,Min),
+	Tmp_result is Min*CF,
+	Result_CF is Tmp_result/100.
+
 pamietaj(X, Y, symptom) :-
 	what(symptom,X,Y).
 	
@@ -379,7 +396,7 @@ init() :-
 % G³ówna funkcja
 wykonaj_ksiazki :-
 	init(),
-    polec(X),!,write('Polecam Ci '), write(X), nl, wyczysc_fakty.
+    polec(X,CF),!,write('Polecam Ci '), write(X),write(' .Wspolczynnik niepwenosci: '),write(CF),nl, wyczysc_fakty.
     
 wykonaj_ksiazki :-
     write('Nie znalazlem dopasowania'),nl,
