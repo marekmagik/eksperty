@@ -144,8 +144,8 @@ lubi(biografia,CF) :-
 
 lubi(lekkie_pozycje,CF) :-
 	wyczysc(liste_symptomow),
-    (pytaj([okazjonalnie,rzadko],jak_czesto);
-    czyta(rzadko,CF_1);
+    (czyta(rzadko,CF_1);
+    pytaj([okazjonalnie,rzadko],jak_czesto);
     pytaj([seriale],oglada)),
     pytaj([impulsywny],jest),
     (pytaj([tak],podroze); 
@@ -155,8 +155,8 @@ lubi(lekkie_pozycje,CF) :-
     
 lubi(ciezkie_pozycje,CF) :-
 	wyczysc(liste_symptomow),
-    (pytaj([codziennie],jak_czesto);
-    czyta(czesto,CF_1);
+    (czyta(czesto,CF_1);
+    pytaj([codziennie],jak_czesto);
     pytaj([filmy],oglada)),
     (pytaj([tak],wyobraznia);
     pytaj([psychologiczne,thrillery,dramaty],filmy)),
